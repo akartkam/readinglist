@@ -1,6 +1,9 @@
 package readinglist;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    http
 	      .authorizeRequests()
 	        .antMatchers("/").access("hasRole('READER')")
+	        //.antMatchers("/").permitAll()
 	        .antMatchers("/**").permitAll()
 	      .and()
 	      //.csrf().disable()
@@ -31,20 +36,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	  }
 	  
 	  @Override
-	  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
+	  protected void configure(
+	              AuthenticationManagerBuilder auth) throws Exception {
 	    auth
-	      .userDetailsService(new UserDetailsService() {
-	        @Override
-	        public UserDetails loadUserByUsername(String username)
-	            throws UsernameNotFoundException {
-	          UserDetails userDetails = readerRepository.getOne(username);
-	          if (userDetails != null) {
-	            return userDetails;
-	          }
-	          throw new UsernameNotFoundException("User '" + username + "' not found.");
+	      .userDetailsService(userDetailsService());
+	  }
+	  
+	  @Bean
+	  public UserDetailsService userDetailsService() {
+	    return new UserDetailsService() {
+	      @Override
+	      public UserDetails loadUserByUsername(String username)
+	          throws UsernameNotFoundException {
+    	
+	        UserDetails userDetails = (UserDetails) readerRepository.findAll().get(0);
+	        String qqq = userDetails.getAuthorities().toString();
+	        if (userDetails != null) {
+	          return userDetails;
 	        }
-	      });
+	        throw new UsernameNotFoundException("User '" + username + "' not found.");
+	      }
+	    };
 	  }
   
   
