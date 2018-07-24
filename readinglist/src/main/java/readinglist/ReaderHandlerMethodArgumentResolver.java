@@ -8,7 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-@Component
+//@Component
 public class ReaderHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
   @Override
