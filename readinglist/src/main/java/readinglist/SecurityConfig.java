@@ -1,6 +1,7 @@
 package readinglist;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -48,9 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	      @Override
 	      public UserDetails loadUserByUsername(String username)
 	          throws UsernameNotFoundException {
-    	
-	        UserDetails userDetails = (UserDetails) readerRepository.findAll().get(0);
-	        String qqq = userDetails.getAuthorities().toString();
+	      	UserDetails userDetails = null;
+	    	Optional<Reader> r= readerRepository.findById(username);
+	        if (r.isPresent()) userDetails = r.get(); 
 	        if (userDetails != null) {
 	          return userDetails;
 	        }

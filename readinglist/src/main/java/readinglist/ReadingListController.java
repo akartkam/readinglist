@@ -14,14 +14,17 @@ import java.util.Optional;
 @RequestMapping("/")
 public class ReadingListController {
 	private ReadingListRepository readingListRepository;
+	private ReaderRepository readerRepository;
 
 	@Autowired
-	public ReadingListController(ReadingListRepository readingListRepository) {
+	public ReadingListController(ReadingListRepository readingListRepository,
+			ReaderRepository readerRepository) {
 		this.readingListRepository = readingListRepository;
+		this.readerRepository = readerRepository;
 	}
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String readersBooks(String reader, Model model) {
+	@RequestMapping(method = RequestMethod.GET)
+	public String readersBooks(Reader reader, Model model) {
 		List<Book> readingList = readingListRepository.findByReader(reader);
 		if (readingList != null) {
 			model.addAttribute("books", readingList);
@@ -33,7 +36,8 @@ public class ReadingListController {
 
 	@RequestMapping(value = "/{reader}", method = RequestMethod.GET)
 	public String readersBooks1(@PathVariable("reader") String reader, Model model) {
-		List<Book> readingList = readingListRepository.findByReader(reader);
+		Reader r = readerRepository.findByUsername(reader);
+		List<Book> readingList = readingListRepository.findByReader(r);
 		if (readingList != null) {
 			model.addAttribute("books", readingList);
 			model.addAttribute("reader", reader);
@@ -44,7 +48,8 @@ public class ReadingListController {
 	@RequestMapping(value = "/{reader}", method = RequestMethod.POST)
 	public String addToReadingList(@PathVariable("reader") String reader,
 			Book book) {
-		book.setReader(reader);
+		Reader r = readerRepository.findByUsername(reader);
+		book.setReader(r);
 		readingListRepository.save(book);
 		return "redirect:/{reader}";
 	}

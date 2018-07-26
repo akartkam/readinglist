@@ -71,7 +71,7 @@ public class MockMvcWebTests {
 				.andExpect(header().string("Location", "/readingList"));
 		Book expectedBook = new Book();
 		expectedBook.setId(1L);
-		expectedBook.setReader("readingList");
+//		expectedBook.setReader((Reader)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		expectedBook.setTitle("BOOK TITLE");
 		expectedBook.setAuthor("BOOK AUTHOR");
 		expectedBook.setIsbn("1234567890");
