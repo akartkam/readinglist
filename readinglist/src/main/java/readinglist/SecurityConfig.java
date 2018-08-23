@@ -30,9 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        //.antMatchers("/").permitAll()
 	        .antMatchers("/**").permitAll()
 	      .and()
-	      //.csrf().disable()
+	      .csrf().disable()
 	      .formLogin()
-	        .loginPage("/login")
+	        .loginPage("/login").permitAll()
 	        .failureUrl("/login?error=true");
 	  }
 	  
@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	      public UserDetails loadUserByUsername(String username)
 	          throws UsernameNotFoundException {
 	      	UserDetails userDetails = null;
-	    	Optional<Reader> r= Optional.of(readerRepository.getOne(username));
+	    	Optional<Reader> r= Optional.of(readerRepository.findOne(username));
 	        if (r.isPresent()) userDetails = r.get(); 
 	        if (userDetails != null) {
 	          return userDetails;
