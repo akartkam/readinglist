@@ -38,17 +38,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(
               AuthenticationManagerBuilder auth) throws Exception {
     auth
-      .userDetailsService(new UserDetailsService() {
-        @Override
-        public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
-          UserDetails userDetails = readerRepository.findOne(username);
-          if (userDetails != null) {
-            return userDetails;
-          }
-          throw new UsernameNotFoundException("User '" + username + "' not found.");
+      .userDetailsService(userDetailsService());
+  }
+  
+  @Bean
+  public UserDetailsService userDetailsService() {
+    return new UserDetailsService() {
+      @Override
+      public UserDetails loadUserByUsername(String username)
+          throws UsernameNotFoundException {
+        UserDetails userDetails = readerRepository.findOne(username);
+        if (userDetails != null) {
+          return userDetails;
         }
-      });
+        throw new UsernameNotFoundException("User '" + username + "' not found.");
+      }
+    };
   }
 
 }
