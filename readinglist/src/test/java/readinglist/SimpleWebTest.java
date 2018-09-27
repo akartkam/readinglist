@@ -43,7 +43,7 @@ public class SimpleWebTest {
 	@BeforeClass
 	public static void openBrowser() {
 		browser = new FirefoxDriver();
-		browser.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		//browser.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
 
 	@AfterClass
